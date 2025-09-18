@@ -28,6 +28,7 @@ def test_api_connection(path):
     try:
         r = requests.get(url, headers=headers, timeout=30)
         r.raise_for_status()
+        st.write("Server response:", r.text)  # ডিবাগ: সম্পূর্ণ রেসপন্স দেখাবে
         return r.json()
     except requests.exceptions.HTTPError as e:
         st.error(f"⚠️ HTTP Error for {path}: {e}")
