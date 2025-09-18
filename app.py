@@ -7,6 +7,24 @@ API_KEY = st.secrets.get("DELTA_API_KEY", "4gk9aExJL9nFgNKXZ80CYFMKqKaqNN")
 API_SECRET = st.secrets.get("DELTA_API_SECRET", "GNia87uLC5G3D1Zbmy54cHAcedngnRj0A4H3R3X4gA5IMJucbQlx8L1fwpT3")
 BASE_URL = "https://cdn-ind.testnet.deltaex.org"
 
+
+# IP চেক
+def get_live_ip():
+    try:
+        response = requests.get("https://api.ipify.org?format=json", timeout=10)
+        response.raise_for_status()
+        ip_data = response.json()
+        return ip_data.get("ip")
+    except Exception as e:
+        st.error(f"IP চেকে ত্রুটি: {str(e)}")
+        return None
+
+live_ip = get_live_ip()
+if live_ip:
+    st.write(f"লাইভ IP: {live_ip}")
+
+
+
 def test_api_connection(path):
     query = ""
     url = BASE_URL + path
@@ -82,4 +100,5 @@ with st.spinner("ডেটা ফেচ করা হচ্ছে..."):
     if balances_data:
         st.subheader("ওয়ালেট ব্যালেন্স")
         print_wallet_balances(balances_data)
+
 
