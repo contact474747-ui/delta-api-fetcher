@@ -3,8 +3,8 @@ import time, hmac, hashlib, requests
 import os
 
 # API কী এবং সিক্রেট Streamlit secrets থেকে নেবে (লাইভে সেট করবেন)
-API_KEY = st.secrets.get("DELTA_API_KEY", "your_placeholder_key")
-API_SECRET = st.secrets.get("DELTA_API_SECRET", "your_placeholder_secret")
+API_KEY = st.secrets.get("DELTA_API_KEY", "4gk9aExJL9nFgNKXZ80CYFMKqKaqNN")
+API_SECRET = st.secrets.get("DELTA_API_SECRET", "GNia87uLC5G3D1Zbmy54cHAcedngnRj0A4H3R3X4gA5IMJucbQlx8L1fwpT3")
 BASE_URL = "https://cdn-ind.testnet.deltaex.org"
 
 def test_api_connection(path):
@@ -82,3 +82,4 @@ with st.spinner("ডেটা ফেচ করা হচ্ছে..."):
     if balances_data:
         st.subheader("ওয়ালেট ব্যালেন্স")
         print_wallet_balances(balances_data)
+
