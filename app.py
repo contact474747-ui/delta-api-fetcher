@@ -65,16 +65,19 @@ def print_wallet_balances(data):
     for bal in balances[:3]:
         asset = bal.get("asset_symbol", "UNKNOWN")
         balance = bal.get("balance", "0")
-        st.success(f"   💰 **{asset}:** {balance}")
+        st.markdown(f"<div style='background: #e0f7fa; border-radius: 8px; padding: 8px; margin-bottom: 6px;'><b>💰 {asset}:</b> {balance}</div>", unsafe_allow_html=True)
 
-st.title("Delta Exchange API Fetcher")
-if st.button("ডেটা ফেচ করুন"):
-    with st.spinner("ডেটা ফেচ করা হচ্ছে..."):
-        positions_data = test_api_connection("/v2/positions/margined")
-        if positions_data:
-            st.subheader("ওপেন পজিশন")
-            pretty_print_positions(positions_data)
-        balances_data = test_api_connection("/v2/wallet/balances")
-        if balances_data:
-            st.subheader("ওয়ালেট ব্যালেন্স")
-            print_wallet_balances(balances_data)
+st.markdown("""
+<h1 style='color:#1976d2; text-align:center; margin-bottom: 0;'>Delta Exchange API Fetcher</h1>
+<hr style='margin-top:0; margin-bottom:1.5em;'>
+""", unsafe_allow_html=True)
+
+with st.spinner("ডেটা ফেচ করা হচ্ছে..."):
+    positions_data = test_api_connection("/v2/positions/margined")
+    if positions_data:
+        st.subheader("ওপেন পজিশন")
+        pretty_print_positions(positions_data)
+    balances_data = test_api_connection("/v2/wallet/balances")
+    if balances_data:
+        st.subheader("ওয়ালেট ব্যালেন্স")
+        print_wallet_balances(balances_data)
