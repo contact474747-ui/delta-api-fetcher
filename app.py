@@ -1,5 +1,8 @@
 import streamlit as st
-import time, hmac, hashlib, requests
+import time
+import hmac
+import hashlib
+import requests
 import os
 import time
 import websocket
@@ -10,11 +13,13 @@ from collections import defaultdict
 
 # API কী এবং সিক্রেট Streamlit secrets থেকে নেবে (লাইভে সেট করবেন)
 API_KEY = st.secrets.get("DELTA_API_KEY", "4gk9aExJL9nFgNKXZ80CYFMKqKaqNN")
-API_SECRET = st.secrets.get("DELTA_API_SECRET", "GNia87uLC5G3D1Zbmy54cHAcedngnRj0A4H3R3X4gA5IMJucbQlx8L1fwpT3")
+API_SECRET = st.secrets.get(
+    "DELTA_API_SECRET", "GNia87uLC5G3D1Zbmy54cHAcedngnRj0A4H3R3X4gA5IMJucbQlx8L1fwpT3")
 BASE_URL = "https://cdn-ind.testnet.deltaex.org"
 BASE_URL2 = "https://testnet-api.delta.exchange"
 # Testnet WebSocket URL
 WS_URL = "wss://socket-ind.testnet.deltaex.org"
+
 
 def test_api_connection(path, query=""):
     query = ""
@@ -23,7 +28,8 @@ def test_api_connection(path, query=""):
     method = "GET"
     body = ""
     signature_payload = method + timestamp + path + query + body
-    signature = hmac.new(API_SECRET.encode(), signature_payload.encode(), hashlib.sha256).hexdigest()
+    signature = hmac.new(
+        API_SECRET.encode(), signature_payload.encode(), hashlib.sha256).hexdigest()
 
     headers = {
         "api-key": API_KEY,
@@ -32,31 +38,31 @@ def test_api_connection(path, query=""):
         "Accept": "application/json",
         "User-Agent": "python-3.11"
     }
-    
+
     try:
         r = requests.get(url, params={}, headers=headers, timeout=30)
         r.raise_for_status()  # HTTP এরর চেক
-    
+
         # st.write("Server response:", r.json())
 
         data = r.json()
-   
-        if(path == "/v2/products"):
+
+        if (path == "/v2/products"):
             st.success("✅ প্রোডাক্ট ডেটা সফলভাবে ফেচ হয়েছে!")
             st.write("Data fetched successfully")  # ডিবাগ: সফল ডেটা ফেচ মেসেজ
             return data
         else:
-            return data    
-    
+            return data
+
     except requests.exceptions.HTTPError as e:
         st.error(f"⚠️ HTTP Error for {path}: {e}")
         if e.response.status_code == 401:
-            st.error("   সম্ভাব্য সমস্যা: অগত্যা API কী, IP whitelisting, বা ৫ মিনিট অপেক্ষা।")
+            st.error(
+                "   সম্ভাব্য সমস্যা: অগত্যা API কী, IP whitelisting, বা ৫ মিনিট অপেক্ষা।")
         return None
     except Exception as e:
         st.error(f"⚠️ সাধারণ ত্রুটি for {path}: {str(e)}")
         return None
-    
 
 
 def get_public_ip():
@@ -66,7 +72,8 @@ def get_public_ip():
         return ip
     except Exception as e:
         return f"Error: {e}"
-    
+
+
 st.write("My public IP:", get_public_ip())
 
 
@@ -79,12 +86,15 @@ def pretty_print_positions(data):
         st.error("❌ কোনো ওপেন পজিশন পাওয়া যায়নি।")
         return
     for p in positions:
-        symbol = p.get("product", {}).get("symbol") or p.get("product_symbol") or "UNKNOWN"
+        symbol = p.get("product", {}).get(
+            "symbol") or p.get("product_symbol") or "UNKNOWN"
         size = p.get("size") or "N/A"
         entry_price = p.get("entry_price") or "N/A"
         mark_price = p.get("mark_price") or "N/A"
         unrealized_pnl = p.get("unrealized_pnl") or "0"
-        st.write(f"🔹 **Symbol:** {symbol} | **Size:** {size} | **Entry:** {entry_price} | **Mark:** {mark_price} | **P/L:** {unrealized_pnl}")
+        st.write(
+            f"🔹 **Symbol:** {symbol} | **Size:** {size} | **Entry:** {entry_price} | **Mark:** {mark_price} | **P/L:** {unrealized_pnl}")
+
 
 def print_wallet_balances(data):
     if not data or not data.get("success", False):
@@ -92,16 +102,15 @@ def print_wallet_balances(data):
         return
     balances = data.get("result", [])
     if not balances:
-        st.info("   কোনো ব্যালেন্স পাওয়া যায়নি (নতুন টেস্টনেট অ্যাকাউন্টে স্বাভাবিক)।")
+        st.info(
+            "   কোনো ব্যালেন্স পাওয়া যায়নি (নতুন টেস্টনেট অ্যাকাউন্টে স্বাভাবিক)।")
         return
     for bal in balances[:3]:
         asset = bal.get("asset_symbol", "UNKNOWN")
         balance = bal.get("balance", "0")
         balance_inr = bal.get("balance_inr", "0")
-        st.markdown(f"<div style='background: #e0f7fa; border-radius: 8px; padding: 8px; margin-bottom: 6px;'><b>💰 {asset}:</b> {balance}<br> <b>💰 INR:</b> {balance_inr} </br></div>", unsafe_allow_html=True)
-
-
-
+        st.markdown(
+            f"<div style='background: #e0f7fa; border-radius: 8px; padding: 8px; margin-bottom: 6px;'><b>💰 {asset}:</b> {balance}<br> <b>💰 INR:</b> {balance_inr} </br></div>", unsafe_allow_html=True)
 
 
 st.markdown("""
@@ -116,25 +125,16 @@ with st.spinner("ডেটা ফেচ করা হচ্ছে..."):
         st.subheader("ওয়ালেট ব্যালেন্স")
         print_wallet_balances(balances_data)
 
-
         # funding_data = test_api_connection2("/v2/products")
         # st.write("Funding Data:", data["result"])
     # if data:
     #     funding_rates = [item.get("funding_rate", 0) for item in data["result"]]  # ধরে নিচ্ছি funding_rate আছে
-        # st.line_chart({"Funding Rate": funding_rates})    
+        # st.line_chart({"Funding Rate": funding_rates})
 
     positions_data = test_api_connection("/v2/positions/margined")
     if positions_data:
         st.subheader("ওপেন পজিশন")
-        pretty_print_positions(positions_data)    
-
-
-
-
-
-
-
-
+        pretty_print_positions(positions_data)
 
 
 # if "funding_history" not in st.session_state:
@@ -179,57 +179,50 @@ with st.spinner("ডেটা ফেচ করা হচ্ছে..."):
 #     time.sleep(2)
 
 
-
-
 # Initialize empty SYMBOLS list
 if "SYMBOLS" not in st.session_state:
     st.session_state["SYMBOLS"] = []  # খালি list
 
 
 # Function to add a new symbol
+
     def add_symbol(new_symbol):
         if new_symbol not in st.session_state["SYMBOLS"]:  # Prevent duplicates
             st.session_state["SYMBOLS"].append(new_symbol)
 
-
-
-
-
-
-
-
-    data_products =test_api_connection("/v2/products")
+    data_products = test_api_connection("/v2/products")
 
     if data_products.get("success", False):
         # perpetual_futures = [item for item in data_products.get("result", []) if item.get("contract_type") == "perpetual_futures"]
         # if perpetual_futures:
 
-        perpetual_futures = [item for item in data_products.get("result", []) if item.get("contract_type") == "perpetual_futures"]
+        perpetual_futures = [item for item in data_products.get(
+            "result", []) if item.get("contract_type") == "perpetual_futures"]
 
     if perpetual_futures:
-            st.write("Total Perpetual Futures:", len(perpetual_futures))
- 
-            data_tickers = test_api_connection("/v2/tickers")
+        st.write("Total Perpetual Futures:", len(perpetual_futures))
 
-            for contract in perpetual_futures: #[:5]: প্রথম ৫ কন্ট্রাক্টের জন্য
-                symbol = contract.get("symbol")
-                # leverage = contract.get("default_leverage", "N/A")
+        data_tickers = test_api_connection("/v2/tickers")
 
-                add_symbol(symbol)  # SYMBOLS লিস্টে নতুন সিম্বল যোগ করুন
+        for contract in perpetual_futures:  # [:5]: প্রথম ৫ কন্ট্রাক্টের জন্য
+            symbol = contract.get("symbol")
+            # leverage = contract.get("default_leverage", "N/A")
 
-                # # Get price from tickers data
-                ticker_data = next((item for item in data_tickers.get("result", []) if item.get("symbol") == symbol), None)
-                price = ticker_data.get("mark_price", "N/A") if ticker_data else "N/A"
-                # st.write(f"Raw Ticker Data for {symbol}: {ticker_data}")  # Debug individual data
+            add_symbol(symbol)  # SYMBOLS লিস্টে নতুন সিম্বল যোগ করুন
 
-                # Get funding rate from tickers data
-                funding_rate = ticker_data.get("funding_rate", "N/A") if ticker_data else "N/A"
+            # # Get price from tickers data
+            ticker_data = next((item for item in data_tickers.get(
+                "result", []) if item.get("symbol") == symbol), None)
+            price = ticker_data.get(
+                "mark_price", "N/A") if ticker_data else "N/A"
+            # st.write(f"Raw Ticker Data for {symbol}: {ticker_data}")  # Debug individual data
 
-                st.write(f"Symbol: {symbol},  Price: {price}, Funding Rate: {funding_rate}")
+            # Get funding rate from tickers data
+            funding_rate = ticker_data.get(
+                "funding_rate", "N/A") if ticker_data else "N/A"
 
-
-
-
+            st.write(
+                f"Symbol: {symbol},  Price: {price}, Funding Rate: {funding_rate}")
 
 
 def format_time_remaining(seconds):
@@ -237,6 +230,7 @@ def format_time_remaining(seconds):
     minutes = (seconds % 3600) // 60
     secs = seconds % 60
     return f"{hours:02d}h:{minutes:02d}m:{secs:02d}s"
+
 
 SYMBOLS = st.session_state["SYMBOLS"]
 
@@ -257,11 +251,14 @@ if "ws_started" not in st.session_state:
 placeholder = st.empty()
 
 # WEBSOCKET CALLBACKS
+
+
 def on_message(ws, message):
     data = json.loads(message)
     if data.get("type") == "funding_rate":
         symbol = data.get("symbol")
         funding_latest_threadsafe[symbol] = data  # Only update dict
+
 
 def on_open(ws):
     subscribe_msg = {
@@ -270,6 +267,7 @@ def on_open(ws):
     }
     ws.send(json.dumps(subscribe_msg))
 
+
 def start_ws():
     ws = websocket.WebSocketApp(
         WS_URL,
@@ -277,6 +275,7 @@ def start_ws():
         on_open=on_open
     )
     ws.run_forever()
+
 
 if not st.session_state["ws_started"]:
     threading.Thread(target=start_ws, daemon=True).start()
@@ -293,14 +292,10 @@ while True:
         html_content += f"<h3>🔹 {symbol}</h3>"
         if latest:
 
-            
-
-
             # st.json(latest)  # ডিবাগ: কাঁচা ডেটা দেখাও
             # STREAMLIT UI
 
-
-             # Convert timestamp
+            # Convert timestamp
             # ts_seconds = latest['timestamp'] / 1000000  # মাইক্রোসেকেন্ড থেকে সেকেন্ডে
             # formatted_time = datetime.fromtimestamp(ts_seconds).strftime("%Hh:%Mm:%Ss")
 
@@ -313,19 +308,18 @@ while True:
             formatted_time = format_time_remaining(seconds_remaining)
             # print(formatted_time)
 
-
             # Timestamp in microseconds
             timestamp_micro = latest.get('timestamp', 0)
             # Convert to seconds
             timestamp_sec = timestamp_micro / 1_000_000
             # Convert to datetime (UTC)
-            update_time = datetime.fromtimestamp(timestamp_sec, tz=timezone.utc)
+            update_time = datetime.fromtimestamp(
+                timestamp_sec, tz=timezone.utc)
             # Convert to local timezone (IST: UTC+5:30)
             update_time_local = update_time + timedelta(hours=5, minutes=30)
 
             # print("Funding Update Time (UTC):", update_time.strftime("%Y-%m-%d %H:%M:%S"))
             # print("Funding Update Time (Local, IST):", update_time_local.strftime("%Y-%m-%d %H:%M:%S"))
-            
 
             html_content += f"""
             <div style="background-color:#f0f8ff; padding:15px; border-radius:10px; margin-bottom:10px;">
@@ -344,4 +338,4 @@ while True:
 
     # REPLACE placeholder content every iteration
     placeholder.markdown(html_content, unsafe_allow_html=True)
-    time.sleep(1) # আপডেট প্রতি 0.5 সেকেন্ডে
+    time.sleep(1)  # আপডেট প্রতি 0.5 সেকেন্ডে
