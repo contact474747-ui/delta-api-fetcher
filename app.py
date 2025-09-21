@@ -59,6 +59,16 @@ def test_api_connection(path, query=""):
     
 
 
+def get_public_ip():
+    try:
+        response = requests.get("https://api.ipify.org?format=json")
+        ip = response.json()["ip"]
+        return ip
+    except Exception as e:
+        return f"Error: {e}"
+    
+st.write("My public IP:", get_public_ip())
+
 
 def pretty_print_positions(data):
     if not data or not data.get("success", False):
