@@ -172,14 +172,14 @@ with st.spinner("ডেটা ফেচ করা হচ্ছে..."):
 
 
 # Initialize empty SYMBOLS list
-        SYMBOLS = []
+    SYMBOLS = []
 
 # Function to add a new symbol
-        def add_symbol(new_symbol):
-            if new_symbol not in SYMBOLS:  # Prevent duplicates
-                SYMBOLS.append(new_symbol)
-                print(f"Added {new_symbol}. Current symbols: {SYMBOLS}")
-            else:
+    def add_symbol(new_symbol):
+        if new_symbol not in SYMBOLS:  # Prevent duplicates
+            SYMBOLS.append(new_symbol)
+            print(f"Added {new_symbol}. Current symbols: {SYMBOLS}")
+        else:
                 print(f"{new_symbol} is already in the list!")
 
 # SYMBOLS list will now contain
@@ -340,4 +340,3 @@ while True:
     # REPLACE placeholder content every iteration
     placeholder.markdown(html_content, unsafe_allow_html=True)
     time.sleep(1) # আপডেট প্রতি 0.5 সেকেন্ডে
-
