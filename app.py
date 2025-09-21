@@ -4,7 +4,6 @@ import hmac
 import hashlib
 import requests
 import os
-import time
 import websocket
 import json
 from datetime import datetime, timezone, timedelta
@@ -330,7 +329,7 @@ while True:
                 <b> Product ID:</b> {latest['product_id']} <br>
                 <b> Product Funding Rate (8h):</b> {latest['predicted_funding_rate_8h']} <br>
                 <b>Symbol:</b> {latest['symbol']} <br>
-                <a><b>Timestamp: UTC :</b>{update_time.strftime("%Y-%m-%d %H:%M:%S")}<b> / Local, IST : </b>{update_time_local.strftime("%Y-%m-%d %H:%M:%S")}</a>
+                <div><b>Timestamp: UTC :</b>{update_time.strftime("%Y-%m-%d %H:%M:%S")}<b> / Local, IST : </b>{update_time_local.strftime("%Y-%m-%d %H:%M:%S")}</div>
             </div>
             """
         else:
