@@ -185,12 +185,11 @@ with st.spinner("ডেটা ফেচ করা হচ্ছে..."):
 if "SYMBOLS" not in st.session_state:
     st.session_state["SYMBOLS"] = []  # খালি list
 
-    SYMBOLS = st.session_state["SYMBOLS"]
 
 # Function to add a new symbol
     def add_symbol(new_symbol):
-        if new_symbol not in SYMBOLS:  # Prevent duplicates
-            SYMBOLS.append(new_symbol)
+        if new_symbol not in st.session_state["SYMBOLS"]:  # Prevent duplicates
+            st.session_state["SYMBOLS"].append(new_symbol)
 
 
 
@@ -241,7 +240,7 @@ def format_time_remaining(seconds):
 
 
 
-
+SYMBOLS = st.session_state["SYMBOLS"]
 
 # SYMBOLS = ["BTCUSD", "ETHUSD"]
 
