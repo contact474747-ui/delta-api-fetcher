@@ -238,9 +238,11 @@ def format_time_remaining(seconds):
     secs = seconds % 60
     return f"{hours:02d}h:{minutes:02d}m:{secs:02d}s"
 
-
-
 SYMBOLS = st.session_state["SYMBOLS"]
+
+if SYMBOLS:
+    st.success(f"✅ মোট {len(SYMBOLS)} সিম্বল ওয়াচলিস্টে যোগ হয়েছে।")
+
 
 # SYMBOLS = ["BTCUSD", "ETHUSD"]
 
