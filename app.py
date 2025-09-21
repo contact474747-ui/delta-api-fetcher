@@ -6,7 +6,6 @@ import websocket
 import json
 from datetime import datetime, timezone, timedelta
 import threading
-from streamlit_autorefresh import st_autorefresh
 from collections import defaultdict
 
 # API কী এবং সিক্রেট Streamlit secrets থেকে নেবে (লাইভে সেট করবেন)
@@ -341,3 +340,4 @@ while True:
     # REPLACE placeholder content every iteration
     placeholder.markdown(html_content, unsafe_allow_html=True)
     time.sleep(1) # আপডেট প্রতি 0.5 সেকেন্ডে
+
