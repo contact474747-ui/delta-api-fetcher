@@ -172,21 +172,15 @@ with st.spinner("ডেটা ফেচ করা হচ্ছে..."):
 
 
 # Initialize empty SYMBOLS list
-    SYMBOLS = []
+if "SYMBOLS" not in st.session_state:
+    st.session_state["SYMBOLS"] = []  # খালি list
+
+    SYMBOLS = st.session_state["SYMBOLS"]
 
 # Function to add a new symbol
     def add_symbol(new_symbol):
         if new_symbol not in SYMBOLS:  # Prevent duplicates
             SYMBOLS.append(new_symbol)
-            print(f"Added {new_symbol}. Current symbols: {SYMBOLS}")
-        else:
-                print(f"{new_symbol} is already in the list!")
-
-# SYMBOLS list will now contain
-    print("Final SYMBOLS list:", SYMBOLS)
-
-
-
 
 
 
