@@ -1,7 +1,7 @@
 name: Fetch Delta Data
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/5 * * * *"  # প্রতি 5 মিনিটে রান (তুমি চাইলে */10 করতে পারো)
   workflow_dispatch:
 jobs:
   run-script:
@@ -15,7 +15,7 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: |
-          pip install requests gspread oauth2client
+          pip install gspread oauth2client
       - name: Run script
         env:
           GOOGLE_SHEET_CREDS: ${{ secrets.GOOGLE_SHEET_CREDS }}
