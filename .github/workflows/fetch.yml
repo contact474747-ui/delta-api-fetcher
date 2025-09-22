@@ -1,7 +1,7 @@
 name: Fetch Delta Data
 on:
   schedule:
-    - cron: "*/5 * * * *"  # প্রতি 5 মিনিটে রান (তুমি চাইলে */10 করতে পারো)
+    - cron: "*/2 * * * *"  # প্রতি 5 মিনিটে রান (তুমি চাইলে */10 করতে পারো)
   workflow_dispatch:
 jobs:
   run-script:
